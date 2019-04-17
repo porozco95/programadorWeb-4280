@@ -11,11 +11,13 @@ var total
 switch (typeOperation) {
   case 'sum':
     total = parsedNumber1 + parsedNumber2
-    console.log('La suma de sus números es:'+ total)
+    message = ('La suma de sus números es:'+ total)
+    console.log(message)
     break
   case 'res':
     total = parsedNumber1 - parsedNumber2
-    console.log('La resta de sus números es:'+ total)
+    message = ('La resta de sus números es:'+ total)
+    console.log(message)
     break
   case 'div':
     while(parsedNumber2 === 0){
@@ -23,12 +25,16 @@ switch (typeOperation) {
       var parsedNumber2 = parseInt(number2,10)
     }
     total = parsedNumber1 / parsedNumber2
-    console.log('La division de sus numeros es:' + total)
+    message = ('La division de sus números es:'+ total)
+    console.log(message)
     break
   case 'mult':
     total = parsedNumber1 * parsedNumber2
-    console.log('La multiplicación de sus numeros es:' + total)
+    message = ('La multiplicacion de sus números es:'+ total)
+    console.log(message)
     break
   default:
-      message = 'Ingreso una operación inválida'
+    message = 'Ingreso una operación inválida'
+    console.log(message)
+    break
 }
