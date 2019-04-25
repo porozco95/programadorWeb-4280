@@ -33,11 +33,8 @@ function searchUser (arrayToSearch, userToSearch) {
   for (var i = 0; i < arrayToSearch.length; i++) {
     user = arrayToSearch[i]
 
-    if (user.firstName === userToSearch) {
+    if (user.firstName === userToSearch || user.lastName === userToSearch) {
       return i
-    }else if (user.lastName === userToSearch) {
-      return i
-    }
   }
   return -1
 }
