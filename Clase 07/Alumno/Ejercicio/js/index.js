@@ -1,3 +1,5 @@
+console.log("Estoy en el ejercicio de clase 07")
+
 var testList = ['CARLOS','GERONIMO','NICOLAS','LUCAS']
 
 setLocalList('studentsList', testList)
