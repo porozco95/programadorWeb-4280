@@ -1,5 +1,8 @@
-var newTitle = document.getElementById('title')
-var newText = document.getElementById('text')
+var oldTitle = document.getElementById('title')
+var oldText = document.getElementById('text')
 
-newTitle.innerHTML = prompt('Ingrese su nuevo Titulo: ')
-newText.innerHTML = prompt('Ingrese su nuevo Texto: ')
+var newTitle = prompt('Ingrese su nuevo Titulo: ')
+var newText = prompt('Ingrese su nuevo Text: ')
+
+oldTitle.innerHTML = newTitle
+oldText.innerHTML = newText
