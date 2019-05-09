@@ -17,7 +17,7 @@ function createStudentNode(student){
 
   li.class = 'list-group-item'
   li.id = student.dni
-//  li.innerHTML = '<h1>' + student.firstName + student.lastName + '</h1>' + '<h3>' + student.dni '</h3>' + '<p>' + student.email + '</p>'
+  li.innerHTML = '<h1>' + student.firstName + student.lastName + '</h1>' + '<h3>' + student.dni + '</h3>' + '<p>' + student.email + '</p>'
 
-  studentList.appendChild(li)
+  return li
 }
