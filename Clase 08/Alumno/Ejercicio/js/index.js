@@ -10,6 +10,7 @@ for (var i = 0; i < texts.length; i++) {
   var li = document.createElement('li')
 
   li.innerHTML = text
+  li.className = 'list-group-item'
 
   // Agrega al final de la lista
   characterList.appendChild(li)
