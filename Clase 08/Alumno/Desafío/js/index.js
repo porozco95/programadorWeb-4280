@@ -7,11 +7,9 @@ var student = {
   email: 'juan@gmail.com'
 }
 
-var studentList = document.getElementById('student-list')
-
-var studentNode = createStudentNode(student)
-
 function createStudentNode(student){
+
+//  var studentList = document.getElementById('student-list')
 
   var li = document.createElement('li')
 
@@ -21,3 +19,5 @@ function createStudentNode(student){
 
   return li
 }
+
+var studentNode = createStudentNode(student)
