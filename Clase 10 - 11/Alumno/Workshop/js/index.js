@@ -3,15 +3,22 @@ console.log('Primer workshop')
 // Busco si hay algo en el LS y sino hay me devuelve un Array vacio
 var studentsList = getLocalList('list')
 
-// Busco el campo nombre y DNI en el DOM y el botón agregar
+// Agregar
 var firstNameInput = document.getElementById('firstName')
-var lastNameInput = document.getElementById('lastName')
 var dniInput = document.getElementById('dni')
-var emailInput = document.getElementById('email')
-var deleteDniInput = document.getElementById('deleteDni')
 var addStudentButton = document.getElementById('addStudentButton')
+
+// Eliminar
+var deleteDniInput = document.getElementById('deleteDni')
 var deleteStudentButton = document.getElementById('deleteStudentButton')
+
+// Lista tanto agregar como eliminar
 var mainListNode = document.getElementById('mainList')
+
+// Búsqueda
+var searchTextInput = document.getElementById('searchText')
+var searchStudentButton = document.getElementById('searchStudentButton')
+var searchListNode = document.getElementById('searchList')
 
 // Carga incial de los elementos en el DOM
 for (var i = 0; i < studentsList.length; i++) {
@@ -20,15 +27,33 @@ for (var i = 0; i < studentsList.length; i++) {
   mainListNode.appendChild(liStudent)
 }
 
-// Respondo al evento on blur con la función que valida el campo nombre, apellido y DNI
+// Respondo al evento on blur con la función que valida el campo nombre y DNI
 firstNameInput.onblur = validateRequired
 dniInput.onblur = validateDni
-emailInput.onblur = validateEmail
-
 
 // Con el botón validado llamo a la función que agrega el estudiante
 addStudentButton.onclick = addStudent
 deleteStudentButton.onclick = deleteStudent
+searchStudentButton.onclick = searchStudent
+
+function searchStudent () {
+  // Busco el valor en input a eliminar
+  var text = searchTextInput.value
+
+  var index = searchStudentIndexByText(text, studentsList)
+
+  // Limpio la lista de búsqueda
+  searchListNode.innerHTML = ''
+
+  if (index !== -1) {
+    // Lo encontré
+    var student = studentsList[index]
+
+    var liSearch = createStudentNode(student)
+
+    searchListNode.appendChild(liSearch)
+  }
+}
 
 function deleteStudent () {
   // Busco el valor en input a eliminar
@@ -60,16 +85,12 @@ function deleteStudent () {
 function addStudent () {
   // Levanto los valores ya validados del form
   var firstNameValue = firstNameInput.value
-  var lastNameValue = lastNameInput.value
   var dniValue = dniInput.value
-  var emailValue = emailInput.value
 
   // Creo un objeto estudiante temporal
   var student = {
     firstName: firstNameValue,
-    lastName: lastNameValue,
-    dni: dniValue,
-    email: emailValue
+    dni: dniValue
   }
 
   // Agrego el estudiante en memoria
@@ -86,16 +107,11 @@ function addStudent () {
 
   // Limpiamos el formulario, los valores en String vacío
   firstNameInput.value = ''
-  lastNameInput.value = ''
   dniInput.value = ''
-  emailInput.value = ''
 
   // Saco las clases validas
   firstNameInput.classList.remove('is-valid')
   dniInput.classList.remove('is-valid')
-  lastNameInput.classList.remove('is-valid')
-  emailInput.classList.remove('is-valid')
-
 
   // Vuelvo a deshabilitar el botón
   addStudentButton.disabled = true
@@ -133,26 +149,6 @@ function validateDni (event) {
   validateAddButton()
 }
 
-function validateEmail (event) {
-  // Encuetro que nodo disparó el evento blur
-  var inputNode = event.target
-
-  // Busco que valor tenía el nodo en ese momento
-  var value = inputNode.value
-
-  if (!value  || value.indexOf('@') === -1 || value.indexOf('.') === -1) {
-    // Caso invalido
-    inputNode.classList.add('is-invalid')
-    inputNode.classList.remove('is-valid')
-  } else {
-    // Caso valido
-    inputNode.classList.add('is-valid')
-    inputNode.classList.remove('is-invalid')
-  }
-
-  validateAddButton()
-}
-
 function validateRequired (event) {
   // Encuetro que nodo disparó el evento blur
   var inputNode = event.target
@@ -178,7 +174,7 @@ function validateAddButton () {
   // Busco todos los campos válido
   var validInputs = document.getElementsByClassName('is-valid')
 
-  if (validInputs.length !== 3) {
+  if (validInputs.length !== 2) {
     addStudentButton.disabled = true
   } else {
     addStudentButton.disabled = false
@@ -253,9 +249,9 @@ function createStudentNode (newStudent) {
   liNode.innerHTML =
     '<h1>' +
     fullName +
-    '</h1><h3>DNI: ' +
+    '</h1><h3>DNI:' +
     newStudent.dni +
-    '</h3><p>E-mail: ' +
+    '</h3><p>E-mail:' +
     newStudent.email +
     '</p>'
 
@@ -284,23 +280,51 @@ function searchStudentIndexByDni (dni, studentsList) {
   return index
 }
 
-function searchStudent (string, array){
+/**
+ * searchStudentIndexByText permite buscar la posición de un estudiante en el array,
+ * comparando nombre o apellido por valor exacto
+ * @param {string} text nombre del estudiante
+ * @param {Array} studentsList Array de estudiantes
+ * @returns {number} posición del estudiante en el Array, si no lo encuentra -1
+ */
 
-// Utilizo el typeof para poder distinguir si lo que me facilita el usuario es un string y devolver false en caso afirmativo
-
-  if (typeof string1 !== 'string'){
-    console.log(false)
-} else {
-
-// Transformo todo a mayusculas para que realice una comparación correcta.
-
-    var string1ToUpperCase = string1.toUpperCase()
-// Chequeo si el string esta incluido en el otro y devuelvo true o false segun corresponda
-
-    if (string2ToUpperCase.indexOf(string1ToUpperCase) !== -1) {
-      console.log(true)
-    } else {
-      console.log(false)
+function searchStudentIndexByText (text, studentsList) {
+  var index = -1
+  for (var i = 0; i < studentsList.length; i++) {
+    var student = studentsList[i]
+    if (
+      // student.firstName === text ||
+      includesText(text, student.firstName) ||
+      // student.lastName === text
+      includesText(text, student.lastName)
+    ) {
+      index = i
+      break
     }
+  }
+  return index
+}
+
+/**
+ * includesText busca coincidencias parciales del primer texto
+ * dentro del segundo
+ * @param {*} text texto a buscar
+ * @param {*} baseText texto donde se va a realizar la búsqueda
+ * @returns {boolean} true si encuentra y false en caso contrario
+ */
+function includesText (text, baseText) {
+  // Valido que ambos parámetros sean string
+  if (typeof text === 'string' && typeof baseText === 'string') {
+    // Verifico si el primer parámetro se encuentra dentro del segundo
+    var textUpperCase = text.toUpperCase()
+    var baseTextUpperCase = baseText.toUpperCase()
+
+    if (baseTextUpperCase.indexOf(textUpperCase) !== -1) {
+      return true
+    } else {
+      return false
+    }
+  } else {
+    return false
   }
 }
